@@ -28,4 +28,4 @@ RUN mkdir -p /app/instance
 EXPOSE 5006
 
 # Run the application
-CMD ["gunicorn", "--bind", "0.0.0.0:5006", "app:app", "--workers=2", "--timeout=120"]
+CMD ["python", "-m", "gunicorn", "--bind", "0.0.0.0:5006", "app:app", "--workers=2", "--timeout=120"]
