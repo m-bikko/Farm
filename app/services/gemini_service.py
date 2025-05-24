@@ -17,9 +17,9 @@ class GeminiService:
         """
         Initialize the Gemini service with API key and model configuration.
         """
-        self.api_key = os.getenv("GOOGLE_API_KEY") or os.getenv("GOOGLE_GENERATIVE_AI_API_KEY")
+        self.api_key = os.getenv("GOOGLE_GENERATIVE_AI_API_KEY")
         if not self.api_key:
-            print("WARNING: Neither GOOGLE_API_KEY nor GOOGLE_GENERATIVE_AI_API_KEY environment variable is set. AI features will not work.")
+            print("WARNING: GOOGLE_GENERATIVE_AI_API_KEY environment variable is not set. AI features will not work.")
             self.is_configured = False
             return
             

@@ -1,7 +1,6 @@
 .git
 .gitignore
-.env
-.env.example
+venv/
 __pycache__/
 *.py[cod]
 *$py.class
@@ -22,5 +21,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
-deploy-instructions.md
-README.md
+*.md
+documentation-ai.md
+instructions.txt
+prompt.txt

@@ -4,7 +4,8 @@
       "Bash(mkdir:*)",
       "Bash(pip install:*)",
       "Bash(python:*)",
-      "Bash(chmod:*)"
+      "Bash(chmod:*)",
+      "Bash(rm:*)"
     ],
     "deny": []
   }

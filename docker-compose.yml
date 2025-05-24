@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  farm-assistant:
+    build: .
+    restart: always
+    ports:
+      - "5006:5006"
+    volumes:
+      - ./app/instance:/app/instance
+    environment:
+      - GOOGLE_GENERATIVE_AI_API_KEY=AIzaSyA7zgkfPqewfQsGhQi7L8OYVxsiZuOguSU
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
