@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  farm-assistant:
+    build: .
+    restart: always
+    volumes:
+      - /data/instance:/app/instance
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GOOGLE_GENERATIVE_AI_API_KEY=${GOOGLE_GENERATIVE_AI_API_KEY}
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+    networks:
+      - farm-network
+
+  nginx:
+    image: nginx:latest
+    restart: always
+    ports:
+      - "5006:80"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    depends_on:
+      - farm-assistant
+    networks:
+      - farm-network
+
+networks:
+  farm-network:
+    driver: bridge
+
+volumes:
+  instance-data:
