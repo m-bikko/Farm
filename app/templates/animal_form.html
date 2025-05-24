@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block title %}Add New Animal - Farm Assistant{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header">
+            <h1 class="mb-0">Add New Animal</h1>
+        </div>
+        <div class="card-body">
+            <form id="animal-form" method="post" action="{{ url_for('new_animal') }}">
+                <div class="form-group">
+                    <label for="animal_tag_id" class="form-label">Animal Tag ID *</label>
+                    <input type="text" id="animal_tag_id" name="animal_tag_id" class="form-control" 
+                           placeholder="e.g., COW-001, PIG-007" required>
+                    <small class="text-muted">Unique identifier for this animal (letters, numbers, hyphens)</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="species" class="form-label">Species *</label>
+                    <select id="species" name="species" class="form-control" required>
+                        <option value="">Select species</option>
+                        <option value="Cow">Cow</option>
+                        <option value="Pig">Pig</option>
+                        <option value="Chicken">Chicken</option>
+                        <option value="Sheep">Sheep</option>
+                        <option value="Goat">Goat</option>
+                        <option value="Horse">Horse</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="breed" class="form-label">Breed</label>
+                    <input type="text" id="breed" name="breed" class="form-control" 
+                           placeholder="e.g., Holstein, Yorkshire">
+                </div>
+                
+                <div class="form-group">
+                    <label for="birth_date" class="form-label">Birth Date *</label>
+                    <input type="date" id="birth_date" name="birth_date" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="notes" class="form-label">Notes</label>
+                    <textarea id="notes" name="notes" class="form-control" rows="3" 
+                              placeholder="Any additional information about this animal"></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Add Animal</button>
+                    <a href="{{ url_for('animals_list') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

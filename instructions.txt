@@ -1,0 +1,407 @@
+Okay, this is a great hackathon project! Let's craft a detailed prompt for an AI agent (like GPT-4, Claude, or a coding-specific LLM) to generate the Flask/SQLite MVP for your Farm Assistant.
+
+Important Note on the API Key:
+You've provided an API key: AIzaSyA7zgkfPqewfQsGhQi7L8OYVxsiZuOguSU.
+NEVER embed API keys directly into prompts or code that will be shared or committed to version control. I will instruct the AI agent to use a placeholder for the API key and explain how it should be managed using environment variables. You will need to set this environment variable in your development and deployment environment. This key looks like a Google Generative AI (Gemini) API key.
+
+Detailed Prompt for AI Project Generation:
+
+Project Title: MVP - AI-Powered Livestock Feeding & Monitoring Assistant
+
+Objective:
+Create a Minimum Viable Product (MVP) for a web application that assists farmers in optimizing livestock care. The application will track feeding routines, animal health data (simulated/mock initially), and use AI prompts to generate feeding suggestions, detect anomalies, and provide health summaries.
+
+Core Technologies:
+
+Backend: Python with Flask
+
+Database: SQLite
+
+Frontend: Basic HTML, CSS, and vanilla JavaScript (for dynamic interactions if necessary, keep it simple for MVP)
+
+AI Integration: Google Generative AI (Gemini) using the Python SDK.
+
+Key Features to Implement (MVP):
+
+Data Models (SQLite):
+
+Animal Table:
+
+id (Integer, Primary Key, Auto-increment)
+
+animal_tag_id (String, Unique, e.g., "COW-001", "PIG-007")
+
+species (String, e.g., "Cow", "Pig", "Chicken")
+
+breed (String, Optional)
+
+birth_date (Date)
+
+notes (Text, Optional)
+
+FeedingLog Table:
+
+id (Integer, Primary Key, Auto-increment)
+
+animal_id (Integer, Foreign Key to Animal.id)
+
+timestamp (DateTime, Default: current_timestamp)
+
+feed_type (String, e.g., "Grain Mix A", "Hay", "Silage")
+
+quantity_kg (Float)
+
+notes (Text, Optional)
+
+HealthRecord Table:
+
+id (Integer, Primary Key, Auto-increment)
+
+animal_id (Integer, Foreign Key to Animal.id)
+
+timestamp (DateTime, Default: current_timestamp)
+
+weight_kg (Float, Optional)
+
+temperature_celsius (Float, Optional)
+
+behavior_observation (Text, e.g., "Lethargic", "Active", "Not eating")
+
+notes (Text, Optional)
+
+Alert Table:
+
+id (Integer, Primary Key, Auto-increment)
+
+animal_id (Integer, Foreign Key to Animal.id, Nullable if general alert)
+
+timestamp (DateTime, Default: current_timestamp)
+
+message (Text)
+
+severity (String, e.g., "Low", "Medium", "High", "Critical")
+
+source (String, e.g., "AI Anomaly Detection", "Manual", "AI Health Summary")
+
+acknowledged (Boolean, Default: False)
+
+Backend (Flask):
+
+Setup:
+
+Basic Flask app structure (app.py, templates/, static/).
+
+SQLAlchemy ORM for database interaction with SQLite.
+
+Database initialization script (to create tables).
+
+API Endpoints (RESTful):
+
+Animals:
+
+POST /api/animals: Add a new animal.
+
+GET /api/animals: List all animals.
+
+GET /api/animals/<animal_tag_id>: Get details of a specific animal.
+
+PUT /api/animals/<animal_tag_id>: Update animal details.
+
+DELETE /api/animals/<animal_tag_id>: Delete an animal.
+
+Feeding Logs:
+
+POST /api/animals/<animal_tag_id>/feeding_logs: Add a feeding log for an animal.
+
+GET /api/animals/<animal_tag_id>/feeding_logs: List feeding logs for an animal.
+
+Health Records:
+
+POST /api/animals/<animal_tag_id>/health_records: Add a health record for an animal.
+
+GET /api/animals/<animal_tag_id>/health_records: List health records for an animal.
+
+Alerts:
+
+GET /api/alerts: List all active (non-acknowledged) alerts.
+
+POST /api/alerts/<alert_id>/acknowledge: Mark an alert as acknowledged.
+
+AI Interaction Endpoints:
+
+POST /api/ai/generate_feeding_plan/<animal_tag_id>:
+
+Takes animal data (species, current weight, age, recent feeding history).
+
+Sends a structured prompt to the AI.
+
+Parses AI response and returns a suggested weekly feeding plan (JSON).
+
+(Optional MVP+) Store this plan or parts of it.
+
+POST /api/ai/detect_anomalies/<animal_tag_id>:
+
+Takes recent feeding logs and health records for an animal.
+
+Sends a structured prompt to the AI to identify unusual patterns (e.g., sudden drop in food intake, weight loss despite consistent feeding, unusual behavior).
+
+Parses AI response. If anomalies are detected, create an Alert in the database.
+
+Returns detected anomalies/alerts (JSON).
+
+GET /api/ai/health_summary/<animal_tag_id>:
+
+Takes all health records and recent feeding logs for an animal.
+
+Sends a structured prompt to the AI to generate a concise health summary.
+
+Returns the summary (JSON).
+
+Frontend (Basic HTML with Jinja2 Templating, minimal JS):
+
+Dashboard Page (/):
+
+Overview of active alerts.
+
+Quick links to add data or view animals.
+
+Animals List Page (/animals):
+
+Table display of all registered animals with key info.
+
+Links to view individual animal details.
+
+Button to "Add New Animal".
+
+Animal Detail Page (/animals/<animal_tag_id>):
+
+Display animal's details.
+
+Tabs/sections for:
+
+Recent Feeding Logs (with form to add new log).
+
+Recent Health Records (with form to add new record).
+
+AI Tools: Buttons to "Generate Feeding Plan", "Detect Anomalies", "Get Health Summary". Results from these actions should be displayed dynamically (or on a new page if simpler for MVP).
+
+Forms: Simple HTML forms for data input.
+
+Alert Display: Clearly show alerts (e.g., a banner on the dashboard).
+
+AI Prompt Logic (To be implemented in Flask backend when calling the AI):
+
+Feeding Suggestions:
+
+Input Context to AI: Animal species, age, current weight, recent feeding history (last 7 days: dates, feed types, quantities), available feed types.
+
+Example Prompt for AI:
+
+You are an AI Farm Assistant specializing in livestock nutrition.
+For a [species] (e.g., Holstein Cow) that is [age] (e.g., 2 years old), currently weighs [weight_kg] kg, and has the following feeding history for the past 7 days:
+[Formatted recent feeding history:
+- YYYY-MM-DD: Feed Type A, X kg
+- YYYY-MM-DD: Feed Type B, Y kg
+...]
+Available feed types include: [List of available feed types].
+Generate a suggested daily feeding plan for the next 7 days, optimizing for healthy growth/maintenance. Provide quantities in kg for each feed type per day. Consider general nutritional needs for this type of animal.
+Output the plan in a structured JSON format like:
+{
+  "animal_tag_id": "[animal_tag_id]",
+  "plan_start_date": "YYYY-MM-DD",
+  "daily_schedule": [
+    { "day": 1, "date": "YYYY-MM-DD", "feedings": [{"feed_type": "Type A", "quantity_kg": Z}, {"feed_type": "Type B", "quantity_kg": W}]},
+    ... (for 7 days)
+  ],
+  "notes": "General recommendations..."
+}
+
+
+Anomaly Detection:
+
+Input Context to AI: Animal species, age, typical behavior (if known), recent feeding logs (last 14 days), recent health records (last 14 days: weight, temp, behavior notes).
+
+Example Prompt for AI:
+
+You are an AI Farm Assistant specializing in animal health monitoring.
+For a [species] (e.g., Yorkshire Pig) with animal ID [animal_tag_id], age [age], consider the following data from the last 14 days:
+Feeding Logs:
+[Formatted recent feeding history:
+- YYYY-MM-DD: Feed Type A, X kg, Notes: ...
+...]
+Health Records:
+[Formatted recent health records:
+- YYYY-MM-DD: Weight X kg, Temp Y C, Behavior: ..., Notes: ...
+...]
+Analyze this data for any unusual patterns or potential health concerns. Look for things like:
+- Significant unexplained decrease/increase in food consumption.
+- Weight loss despite adequate feeding.
+- Consistently high/low temperature.
+- Reported lethargy or unusual behavior changes.
+- Deviations from expected norms for this animal type.
+If anomalies are found, describe each anomaly, its potential cause, and suggest a severity level (Low, Medium, High).
+Output in JSON format:
+{
+  "animal_tag_id": "[animal_tag_id]",
+  "anomalies_detected": [
+    {
+      "description": "Sudden 20% decrease in feed intake over the last 3 days.",
+      "potential_cause": "Possible illness, dental issue, or stress.",
+      "severity": "Medium",
+      "data_points_of_concern": ["FeedingLog ID 123", "FeedingLog ID 125"]
+    }
+  ],
+  "overall_assessment": "Some concerns noted, further observation recommended."
+}
+If no significant anomalies, return an empty anomalies_detected list and a positive assessment.
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+IGNORE_WHEN_COPYING_END
+
+Health Summaries:
+
+Input Context to AI: Animal species, age, all available feeding logs, all available health records.
+
+Example Prompt for AI:
+
+You are an AI Farm Assistant.
+For animal ID [animal_tag_id], a [species] aged [age], provide a concise health and feeding summary based on the following data:
+All Feeding Logs:
+[Formatted feeding history]
+All Health Records:
+[Formatted health records]
+Summarize key trends in feeding, weight, temperature, and behavior. Highlight any periods of concern or improvement. Provide an overall health status indication.
+Output in JSON format:
+{
+  "animal_tag_id": "[animal_tag_id]",
+  "summary_period_start": "YYYY-MM-DD",
+  "summary_period_end": "YYYY-MM-DD",
+  "feeding_summary": "Average daily intake X kg. Consistent feed types. [Any notable changes].",
+  "weight_trend": "Weight has [increased/decreased/stayed stable] from X kg to Y kg. [Comment on trend].",
+  "temperature_trend": "Temperatures generally stable around X C. [Any notable spikes/dips].",
+  "behavior_summary": "Behavior mostly [e.g., active]. [Any reported issues and their resolution/status].",
+  "overall_status": "Good / Fair / Needs Monitoring / Concern",
+  "recommendations": ["Continue current feeding plan.", "Monitor X more closely."]
+}
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+IGNORE_WHEN_COPYING_END
+
+Mock Data Simulation:
+
+Provide a Python script (seed_db.py or similar) that populates the SQLite database with some initial mock data for 5-10 animals, including varied feeding logs and health records over a period (e.g., 1-2 months). This data should include some patterns that the AI could potentially identify as normal or anomalous.
+
+AI Integration Details (Google Generative AI - Gemini):
+
+Library: Use the google-generativeai Python library.
+
+# Example Python snippet for Flask backend
+import google.generativeai as genai
+import os
+
+# IMPORTANT: Configure the API key using an environment variable
+# The user will set this environment variable in their system.
+# Do NOT hardcode the API key.
+API_KEY = os.getenv("GOOGLE_API_KEY")
+if not API_KEY:
+    raise ValueError("GOOGLE_API_KEY environment variable not set.")
+genai.configure(api_key=API_KEY)
+
+# For text-only input
+model = genai.GenerativeModel('gemini-pro')
+
+def get_ai_response(prompt_text):
+    try:
+        response = model.generate_content(prompt_text)
+        # Ensure to handle potential errors or non-text parts if using vision models later
+        return response.text
+    except Exception as e:
+        print(f"Error calling Google AI: {e}")
+        # In a real app, you might return a more specific error or log this
+        return f"Error generating AI response: {str(e)}"
+
+# --- Inside a Flask route ---
+# animal_data = ... # gather data from DB
+# prompt = f"Based on this data {animal_data}, suggest a feeding plan." # Simplified example
+#
+# # Construct one of the detailed JSON-expecting prompts described above
+# detailed_prompt_text = "..." # Your carefully crafted prompt
+#
+# ai_suggestion_raw = get_ai_response(detailed_prompt_text)
+#
+# try:
+#   ai_suggestion_json = json.loads(ai_suggestion_raw)
+#   # process ai_suggestion_json
+# except json.JSONDecodeError:
+#   # Handle cases where AI response is not valid JSON
+#   print(f"AI response was not valid JSON: {ai_suggestion_raw}")
+#   # Potentially try to re-prompt or return an error
+IGNORE_WHEN_COPYING_START
+content_copy
+download
+Use code with caution.
+Python
+IGNORE_WHEN_COPYING_END
+
+API Key Management:
+
+The AI code should expect the Google API key to be set as an environment variable named GOOGLE_API_KEY.
+
+Provide instructions in a README.md file on how to set this environment variable (e.g., export GOOGLE_API_KEY='your_actual_key_here' on Linux/macOS or using .env file with python-dotenv library).
+
+Error Handling: Implement basic error handling for API calls (e.g., network issues, API errors, invalid responses).
+
+Parsing Responses: The AI will be prompted to return JSON. The Flask backend will need to parse this JSON. Include robust parsing and error handling for cases where the AI might not return perfect JSON.
+
+My Suggestions for Project Improvement (for you to consider beyond MVP):
+
+Species-Specific Logic: While AI can generalize, for a real product, you'd want more fine-tuned prompts or even different AI models/configurations for different livestock species (e.g., dairy cows vs. broiler chickens).
+
+Image/Video Analysis (Future AI): If the hackathon allows or for future development, consider integrating image analysis (e.g., for visual health checks from photos, body condition scoring). Gemini Pro Vision could be used for this.
+
+Real Sensor Data Integration: Instead of mock data, plan for future integration with IoT sensors (e.g., automated feeders, temperature sensors, activity trackers).
+
+User Roles & Permissions: For a production app, different users (farm manager, vet, worker) would have different access levels.
+
+More Sophisticated Anomaly Detection: Beyond basic AI prompting, explore time-series anomaly detection algorithms for quantitative data.
+
+User Feedback Loop for AI: Allow users to rate the usefulness of AI suggestions, which could (in a larger system) be used to fine-tune prompts or models.
+
+Mobile Responsiveness: Ensure the basic HTML/CSS is reasonably viewable on mobile, as farmers are often in the field.
+
+Notifications: Implement more active notifications (e.g., email alerts) for critical issues.
+
+Deliverables Expected from AI Agent:
+
+A complete Flask application directory structure.
+
+app.py containing Flask routes, database interaction logic, and AI integration functions.
+
+models.py (or similar) defining SQLAlchemy models.
+
+templates/ directory with HTML files for the frontend.
+
+static/ directory (if any CSS/JS is used).
+
+requirements.txt file listing all Python dependencies (Flask, SQLAlchemy, google-generativeai, python-dotenv, etc.).
+
+seed_db.py script to populate the database with initial mock data.
+
+A README.md file with:
+
+Instructions on how to set up the project (install dependencies, set GOOGLE_API_KEY environment variable).
+
+How to initialize the database and run the seed script.
+
+How to run the Flask application.
+
+Brief overview of the API endpoints.
+
+Final Instruction to AI Agent:
+"Please generate the Python Flask/SQLite MVP project as described above. Pay close attention to the AI integration details, ensuring the API key is handled via an environment variable GOOGLE_API_KEY and not hardcoded. The AI prompts should be designed to request JSON output for easier parsing. Ensure all specified features for the MVP are included. The code should be well-commented and follow good Python practices."
+
+This detailed prompt should give the AI agent a very clear roadmap. Remember to replace 'your_actual_key_here' with your actual API key when you set the environment variable on your system. Good luck with your hackathon!

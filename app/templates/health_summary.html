@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}Health Summary - {{ animal.animal_tag_id }} - Farm Assistant{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Health Summary for {{ animal.animal_tag_id }}</h1>
+        <a href="{{ url_for('animal_detail', animal_tag_id=animal.animal_tag_id) }}" class="btn btn-secondary">
+            Back to Animal
+        </a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">AI-Generated Health Summary</h2>
+        </div>
+        <div class="card-body">
+            {% if summary %}
+                <div class="mb-3">
+                    <h3>Summary Overview</h3>
+                    <p><strong>Animal:</strong> {{ summary.animal_tag_id }}</p>
+                    <p><strong>Summary Period:</strong> {{ summary.summary_period_start }} to {{ summary.summary_period_end }}</p>
+                    <div class="alert alert-{{ 'success' if summary.overall_status == 'Good' else 'info' if summary.overall_status == 'Fair' else 'warning' if summary.overall_status == 'Needs Monitoring' else 'danger' }}">
+                        <strong>Overall Status:</strong> {{ summary.overall_status }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header">Feeding Summary</div>
+                            <div class="card-body">
+                                <p>{{ summary.feeding_summary }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header">Weight Trend</div>
+                            <div class="card-body">
+                                <p>{{ summary.weight_trend }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header">Temperature Trend</div>
+                            <div class="card-body">
+                                <p>{{ summary.temperature_trend }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card mb-3">
+                            <div class="card-header">Behavior Summary</div>
+                            <div class="card-body">
+                                <p>{{ summary.behavior_summary }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {% if summary.recommendations %}
+                    <div class="card mb-3">
+                        <div class="card-header">Recommendations</div>
+                        <div class="card-body">
+                            <ul>
+                                {% for recommendation in summary.recommendations %}
+                                    <li>{{ recommendation }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            {% elif raw_response %}
+                {% if raw_response.startswith('Error generating AI response:') %}
+                    <div class="alert alert-danger">
+                        <h4>Error from AI Service</h4>
+                        <p>{{ raw_response }}</p>
+                        <p>This could be due to issues with the API key, network connectivity, or service availability. Please try again later.</p>
+                    </div>
+                {% else %}
+                    <div class="alert alert-warning">
+                        <h4>AI Response (Raw Format)</h4>
+                        <p>The AI response could not be parsed as structured data. Please see the raw response below:</p>
+                    </div>
+                    <pre class="mt-3" style="background: #f5f5f5; padding: 15px; border-radius: 4px; white-space: pre-wrap;">{{ raw_response }}</pre>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-danger">
+                    <p>No response was received from the AI system. Please try again later.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mb-0">Summary Interpretation</h3>
+        </div>
+        <div class="card-body">
+            <p>This health summary provides an overview of the animal's condition based on all available data. Here's how to interpret the results:</p>
+            
+            <h4>Overall Status Levels:</h4>
+            <ul>
+                <li><strong>Good:</strong> Animal is healthy and maintaining normal patterns.</li>
+                <li><strong>Fair:</strong> Animal is generally healthy but has some minor concerns that should be monitored.</li>
+                <li><strong>Needs Monitoring:</strong> Some concerning trends are present that require closer attention.</li>
+                <li><strong>Concern:</strong> Significant issues detected that may require intervention.</li>
+            </ul>
+            
+            <p>Use this summary to inform your management decisions and identify potential areas for improvement in the animal's care.</p>
+        </div>
+    </div>
+{% endblock %}

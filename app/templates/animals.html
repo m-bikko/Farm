@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Animals - Farm Assistant{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>Animals</h1>
+        <a href="{{ url_for('new_animal') }}" class="btn btn-primary">Add New Animal</a>
+    </div>
+    
+    {% if animals %}
+        <div class="animal-grid">
+            {% for animal in animals %}
+                <div class="card animal-card">
+                    <div class="card-header">
+                        {{ animal.animal_tag_id }}
+                    </div>
+                    <div class="card-body">
+                        <h3>{{ animal.species }}</h3>
+                        {% if animal.breed %}
+                            <p>Breed: {{ animal.breed }}</p>
+                        {% endif %}
+                        <p>Birth Date: {{ animal.birth_date.strftime('%Y-%m-%d') }}</p>
+                        {% if animal.notes %}
+                            <p>Notes: {{ animal.notes }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="card-footer">
+                        <a href="{{ url_for('animal_detail', animal_tag_id=animal.animal_tag_id) }}" class="btn btn-info">View Details</a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="card">
+            <div class="card-body text-center">
+                <p>No animals have been registered yet.</p>
+                <a href="{{ url_for('new_animal') }}" class="btn btn-primary">Add Your First Animal</a>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

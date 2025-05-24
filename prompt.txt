@@ -1,0 +1,15 @@
+I'm participating at the hackathon and this is topic:
+Agriculture – Farm Assistant for Livestock Feeding & Monitoring
+Goal:
+Support farmers in optimizing livestock care by tracking feeding routines and animal health using AI prompts.
+Description:
+Design an assistant that helps monitor animals’ feeding schedules, detect unusual patterns, and suggest improvements in care. The app can simulate input data to generate alerts and optimized routines.
+Key Features:
+Data input: Mock data on animal feeding times, weight, or behavior
+Prompt logic: Generate feeding suggestions and detect anomalies
+Output: Alerts, weekly feeding plans, and health summaries
+
+I need to use AI for this project and here is the API key:
+AIzaSyA7zgkfPqewfQsGhQi7L8OYVxsiZuOguSU
+
+Now create me detailed prompt for another AI agent to create this project, give detailed instruction for integrating AI(documentation), so that AI made it correctly. You can add your own suggessions for improving the project's idea

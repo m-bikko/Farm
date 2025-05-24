@@ -1,0 +1,412 @@
+:root {
+  --primary-color: #4CAF50;
+  --primary-dark: #388E3C;
+  --primary-light: #C8E6C9;
+  --accent-color: #FF9800;
+  --text-primary: #212121;
+  --text-secondary: #757575;
+  --divider-color: #BDBDBD;
+  --error-color: #F44336;
+  --warning-color: #FFC107;
+  --success-color: #8BC34A;
+  --info-color: #2196F3;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  color: var(--text-primary);
+  margin: 0;
+  padding: 0;
+  background-color: #f5f5f5;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* Navigation */
+.navbar {
+  background-color: var(--primary-color);
+  color: white;
+  padding: 15px 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.navbar-nav {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-item {
+  margin-left: 20px;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.nav-link:hover {
+  opacity: 0.8;
+}
+
+/* Cards */
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.card-header {
+  padding: 15px 20px;
+  background-color: var(--primary-light);
+  border-bottom: 1px solid var(--divider-color);
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.card-footer {
+  padding: 15px 20px;
+  background-color: #f9f9f9;
+  border-top: 1px solid var(--divider-color);
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid var(--divider-color);
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.form-control:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 10px 16px;
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  text-decoration: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.1s;
+}
+
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn:active {
+  transform: translateY(1px);
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.btn-danger {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.btn-warning {
+  background-color: var(--warning-color);
+  color: white;
+}
+
+.btn-info {
+  background-color: var(--info-color);
+  color: white;
+}
+
+/* Alerts */
+.alert {
+  padding: 15px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
+.alert-success {
+  background-color: rgba(139, 195, 74, 0.2);
+  border: 1px solid var(--success-color);
+  color: #33691E;
+}
+
+.alert-danger {
+  background-color: rgba(244, 67, 54, 0.2);
+  border: 1px solid var(--error-color);
+  color: #B71C1C;
+}
+
+.alert-warning {
+  background-color: rgba(255, 193, 7, 0.2);
+  border: 1px solid var(--warning-color);
+  color: #FF6F00;
+}
+
+.alert-info {
+  background-color: rgba(33, 150, 243, 0.2);
+  border: 1px solid var(--info-color);
+  color: #0D47A1;
+}
+
+/* Tables */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.table th,
+.table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--divider-color);
+  text-align: left;
+}
+
+.table th {
+  background-color: var(--primary-light);
+  font-weight: 600;
+}
+
+.table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Badges */
+.badge {
+  display: inline-block;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+.badge-success {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.badge-danger {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.badge-warning {
+  background-color: var(--warning-color);
+  color: var(--text-primary);
+}
+
+.badge-info {
+  background-color: var(--info-color);
+  color: white;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--divider-color);
+  margin-bottom: 20px;
+}
+
+.tab-item {
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-item.active {
+  border-bottom-color: var(--primary-color);
+  font-weight: 600;
+}
+
+.tab-item:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.tab-content {
+  padding: 20px 0;
+}
+
+/* Layout Utilities */
+.d-flex {
+  display: flex;
+}
+
+.justify-content-between {
+  justify-content: space-between;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+.mb-1 {
+  margin-bottom: 0.5rem;
+}
+
+.mb-2 {
+  margin-bottom: 1rem;
+}
+
+.mb-3 {
+  margin-bottom: 1.5rem;
+}
+
+.mb-4 {
+  margin-bottom: 2rem;
+}
+
+.mt-1 {
+  margin-top: 0.5rem;
+}
+
+.mt-2 {
+  margin-top: 1rem;
+}
+
+.mt-3 {
+  margin-top: 1.5rem;
+}
+
+.mt-4 {
+  margin-top: 2rem;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+/* Severity colors for alerts */
+.severity-low {
+  border-left: 4px solid var(--success-color);
+}
+
+.severity-medium {
+  border-left: 4px solid var(--warning-color);
+}
+
+.severity-high {
+  border-left: 4px solid var(--error-color);
+}
+
+.severity-critical {
+  border-left: 4px solid #9C27B0;
+  background-color: rgba(156, 39, 176, 0.05);
+}
+
+/* Farm-specific elements */
+.animal-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.animal-card .card-body {
+  flex-grow: 1;
+}
+
+.animal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.animal-details {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 20px;
+}
+
+.animal-info {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+@media (max-width: 768px) {
+  .animal-details {
+    grid-template-columns: 1fr;
+  }
+  
+  .navbar-container {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .navbar-nav {
+    margin-top: 10px;
+  }
+  
+  .nav-item {
+    margin-left: 0;
+    margin-right: 20px;
+  }
+}

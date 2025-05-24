@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Farm Assistant{% endblock %}
+
+{% block content %}
+    <h1 class="mb-3">Dashboard</h1>
+    
+    <div class="row">
+        <div class="col">
+            <div class="card mb-3">
+                <div class="card-header">Quick Actions</div>
+                <div class="card-body">
+                    <a href="{{ url_for('new_animal') }}" class="btn btn-primary mb-2">Add New Animal</a>
+                    <a href="{{ url_for('animals_list') }}" class="btn btn-secondary mb-2">View All Animals</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="card mb-4">
+        <div class="card-header">Active Alerts</div>
+        <div class="card-body">
+            {% if alerts %}
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Animal ID</th>
+                                <th>Date</th>
+                                <th>Message</th>
+                                <th>Severity</th>
+                                <th>Source</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for alert in alerts %}
+                                <tr class="severity-{{ alert.severity.lower() }}">
+                                    <td>
+                                        {% if alert.animal_id %}
+                                            {% set animal = Animal.query.get(alert.animal_id) %}
+                                            {% if animal %}
+                                                <a href="{{ url_for('animal_detail', animal_tag_id=animal.animal_tag_id) }}">
+                                                    {{ animal.animal_tag_id }}
+                                                </a>
+                                            {% else %}
+                                                Unknown
+                                            {% endif %}
+                                        {% else %}
+                                            General
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ alert.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                    <td>{{ alert.message }}</td>
+                                    <td>
+                                        <span class="badge badge-{{ 'success' if alert.severity == 'Low' else 'warning' if alert.severity == 'Medium' else 'danger' }}">
+                                            {{ alert.severity }}
+                                        </span>
+                                    </td>
+                                    <td>{{ alert.source }}</td>
+                                    <td>
+                                        <form action="{{ url_for('acknowledge_alert', alert_id=alert.id) }}" method="post">
+                                            <button type="submit" class="btn btn-sm btn-secondary">Acknowledge</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center">No active alerts. Everything is running smoothly!</p>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

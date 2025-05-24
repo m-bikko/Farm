@@ -1,0 +1,253 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ animal.animal_tag_id }} - Farm Assistant{% endblock %}
+
+{% block content %}
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h1>{{ animal.animal_tag_id }}</h1>
+        <a href="{{ url_for('animals_list') }}" class="btn btn-secondary">Back to Animals</a>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h2 class="mb-0">Animal Information</h2>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Species:</strong> {{ animal.species }}</p>
+                    <p><strong>Breed:</strong> {{ animal.breed or 'Not specified' }}</p>
+                    <p><strong>Birth Date:</strong> {{ animal.birth_date.strftime('%Y-%m-%d') }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Age:</strong> 
+                        {% set age_days = (today - animal.birth_date).days %}
+                        {% set age_years = age_days / 365 %}
+                        {{ '%.1f'|format(age_years) }} years ({{ age_days }} days)
+                    </p>
+                    <p><strong>Notes:</strong> {{ animal.notes or 'No notes' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <div class="tab-item active" data-tab="feeding-tab">Feeding Records</div>
+        <div class="tab-item" data-tab="health-tab">Health Records</div>
+        <div class="tab-item" data-tab="ai-tools-tab">AI Tools</div>
+    </div>
+
+    <!-- Feeding Records Tab -->
+    <div id="feeding-tab" class="tab-content">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">Add Feeding Record</h3>
+            </div>
+            <div class="card-body">
+                <form id="feeding-form" method="post" action="{{ url_for('add_feeding', animal_tag_id=animal.animal_tag_id) }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="feed_type" class="form-label">Feed Type *</label>
+                                <select id="feed_type" name="feed_type" class="form-control" required>
+                                    <option value="">Select feed type</option>
+                                    <option value="Hay">Hay</option>
+                                    <option value="Grain Mix">Grain Mix</option>
+                                    <option value="Silage">Silage</option>
+                                    <option value="Pellets">Pellets</option>
+                                    <option value="Grass">Grass</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="quantity_kg" class="form-label">Quantity (kg) *</label>
+                                <input type="number" id="quantity_kg" name="quantity_kg" class="form-control" 
+                                       step="0.1" min="0.1" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea id="notes" name="notes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Feeding Record</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Recent Feeding Records</h3>
+            </div>
+            <div class="card-body">
+                {% if feeding_logs %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Feed Type</th>
+                                    <th>Quantity (kg)</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for log in feeding_logs %}
+                                    <tr>
+                                        <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>{{ log.feed_type }}</td>
+                                        <td>{{ log.quantity_kg }}</td>
+                                        <td>{{ log.notes or '' }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center">No feeding records have been added yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Records Tab -->
+    <div id="health-tab" class="tab-content" style="display: none;">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">Add Health Record</h3>
+            </div>
+            <div class="card-body">
+                <form id="health-form" method="post" action="{{ url_for('add_health', animal_tag_id=animal.animal_tag_id) }}">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="weight_kg" class="form-label">Weight (kg)</label>
+                                <input type="number" id="weight_kg" name="weight_kg" class="form-control" 
+                                       step="0.1" min="0">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="temperature_celsius" class="form-label">Temperature (°C)</label>
+                                <input type="number" id="temperature_celsius" name="temperature_celsius" 
+                                       class="form-control" step="0.1" min="30" max="45">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="behavior_observation" class="form-label">Behavior Observation *</label>
+                        <select id="behavior_observation" name="behavior_observation" class="form-control" required>
+                            <option value="">Select behavior</option>
+                            <option value="Active">Active</option>
+                            <option value="Normal">Normal</option>
+                            <option value="Lethargic">Lethargic</option>
+                            <option value="Not eating">Not eating</option>
+                            <option value="Aggressive">Aggressive</option>
+                            <option value="Distressed">Distressed</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="notes" class="form-label">Notes</label>
+                        <textarea id="notes" name="notes" class="form-control" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success">Add Health Record</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3 class="mb-0">Recent Health Records</h3>
+            </div>
+            <div class="card-body">
+                {% if health_records %}
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>Date</th>
+                                    <th>Weight (kg)</th>
+                                    <th>Temp (°C)</th>
+                                    <th>Behavior</th>
+                                    <th>Notes</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for record in health_records %}
+                                    <tr>
+                                        <td>{{ record.timestamp.strftime('%Y-%m-%d %H:%M') }}</td>
+                                        <td>{{ record.weight_kg or 'N/A' }}</td>
+                                        <td>{{ record.temperature_celsius or 'N/A' }}</td>
+                                        <td>{{ record.behavior_observation }}</td>
+                                        <td>{{ record.notes or '' }}</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-center">No health records have been added yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Tools Tab -->
+    <div id="ai-tools-tab" class="tab-content" style="display: none;">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h3 class="mb-0">AI-Powered Assistance</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h4>Feeding Plan</h4>
+                                <p>Generate an optimized feeding plan based on this animal's data.</p>
+                                <a href="{{ url_for('generate_feeding_plan', animal_tag_id=animal.animal_tag_id) }}" 
+                                   class="btn btn-primary">Generate Plan</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h4>Detect Anomalies</h4>
+                                <p>Analyze recent data to detect potential health or feeding anomalies.</p>
+                                <a href="{{ url_for('detect_anomalies', animal_tag_id=animal.animal_tag_id) }}" 
+                                   class="btn btn-warning">Detect Anomalies</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <h4>Health Summary</h4>
+                                <p>Generate a comprehensive health and feeding summary report.</p>
+                                <a href="{{ url_for('health_summary', animal_tag_id=animal.animal_tag_id) }}" 
+                                   class="btn btn-info">Generate Summary</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="alert alert-info mt-3">
+                    <p><strong>Note:</strong> AI tools require sufficient data to provide accurate insights. 
+                    Please make sure you have entered several feeding and health records for best results.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Calculate today's date for the age calculation
+        window.today = new Date({{ today.strftime('%Y, %m, %d')|safe }});
+    });
+</script>
+{% endblock %}
